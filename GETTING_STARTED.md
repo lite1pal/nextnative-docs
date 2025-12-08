@@ -8,7 +8,7 @@ This guide will walk you through setting up your NextNative app and customizing 
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/nextnative-boilerplate.git your-app-name
+git clone https://github.com/lite1pal/nextnative_boilerplate.git your-app-name
 cd your-app-name
 
 # Install dependencies
