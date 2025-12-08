@@ -69,7 +69,3 @@ NextNative is built with:
 - [Firebase Documentation](https://firebase.google.com/docs)
 - [RevenueCat Documentation](https://docs.revenuecat.com/docs)
 - [SWR Documentation](https://swr.vercel.app)
-
-## 📝 License
-
-This project is licensed under the MIT License.
