@@ -1,0 +1,256 @@
+import { Callout } from "nextra-theme-docs";
+
+# Troubleshooting
+
+Common issues and solutions for NextNative development.
+
+## Setup & Environment
+
+### Node Version Issues
+
+<Callout type="warning">
+  **NextNative** requires Node 20 or greater. Type `node -v` in your terminal to
+  check version.
+</Callout>
+
+**Solution:** Upgrade Node.js to version 20 or higher from [nodejs.org](https://nodejs.org/).
+
+---
+
+### Android Studio on Mac M1-M4
+
+<Callout type="info">
+  If you have a mac M1-M4, I recommend downloading [Android Studio Ladybug
+  October 2024](https://developer.android.com/studio/archive) release. It's way
+  more stable and has less cache bugs.
+</Callout>
+
+**Solution:** Use the Android Studio Ladybug October 2024 release instead of the latest version for better stability on Apple Silicon Macs.
+
+---
+
+## iOS Development
+
+### Running on Real Device
+
+<Callout type="warning">
+  If you want to run on a real device right away, [rename your
+  app](/preparing-for-deployment/rename-your-app) first because Apple requires a
+  unique bundle id for this.
+</Callout>
+
+**Solution:** Follow the [rename your app guide](/preparing-for-deployment/rename-your-app) before attempting to run on a physical iOS device.
+
+---
+
+### Firebase Authorization Setup
+
+<Callout type="warning">
+  [Rename your app](../preparing-for-deployment/rename-your-app) before setting
+  up Firebase Authorization for iOS.
+</Callout>
+
+**Solution:** Complete the app renaming process before configuring Firebase Auth to avoid bundle ID conflicts.
+
+---
+
+## Android Development
+
+### Firebase Configuration
+
+<Callout type="warning">
+  [Rename your app](../preparing-for-deployment/rename-your-app) before setting
+  up Firebase for Android.
+</Callout>
+
+**Solution:** Rename your app before setting up Firebase to ensure the package name matches your Firebase configuration.
+
+---
+
+### Google Services Plugin
+
+<Callout type="info">
+  If you don't need Firebase Auth/Notifications in your app at all,
+  go to **android/app/build.gradle** and remove this line:
+
+```gradle
+apply plugin: 'com.google.gms.google-services'
+```
+
+</Callout>
+
+**Solution:** If you're not using Firebase, remove the google-services plugin from your `build.gradle` to avoid build errors.
+
+---
+
+### Build.gradle Already Updated
+
+<Callout type="warning">
+  **It's already done** in the latest update of NextNative, so if you have the
+  latest version pulled, no need to do this.
+</Callout>
+
+**Note:** If you have the latest version of NextNative, the Firebase configuration in `build.gradle` is already properly set up.
+
+---
+
+### Package Renaming Didn't Work
+
+<Callout type="warning">
+If that didn't work for some reason, rename **android/src/main/java/com/[yourcompany]/[appname]** path yourself.
+
+Then change "package" in **android/src/main/java/com/[yourcompany]/[appname]/MainActivity.java** to your new app's package name.
+
+</Callout>
+
+**Solution:** Manually rename the directory structure and update the package declaration in `MainActivity.java` if Android Studio's refactor tool fails.
+
+---
+
+### Testing Google Login on M1/M2/Windows
+
+<Callout type="info">
+  Run your app on a real Android phone.
+  <br /> <br /> It's the only way to test native Google login reliably on a Mac M1/M2
+  and many Windows PCs. <br /> <br /> If you don't have an Android phone, no worries,
+  you can test everything in a browser. But it's recommended to test on a real device
+  before publishing an app.
+</Callout>
+
+**Solution:** Use a real Android device to test Google login if you're on Mac M1/M2 or Windows PC, as emulators may not work reliably for this feature.
+
+---
+
+## Live Reload & Development
+
+### Firewall Blocking Live Reload
+
+<Callout type="warning">
+  I recommend turning off the Firewall for the live reload to function properly.
+  Because I've been caught many times with this and couldn't figure why I
+  couldn't access the app from the emulator.
+</Callout>
+
+**Solution:** Temporarily disable your firewall or add an exception for your development server to allow the mobile app to connect to the live reload server.
+
+---
+
+## Deployment
+
+### Running Production Build
+
+<Callout>
+  When you're ready to ship the production build to the App Store or Google Play, run:
+
+`npm run mobile`
+
+Then follow the [Preparing for deployment](https://docs.nextnative.dev/preparing-for-deployment/rename-your-app) guide.
+
+</Callout>
+
+**Note:** Always run `npm run mobile` before deploying to ensure your app has the latest production build.
+
+---
+
+<Callout>
+  Don't forget to run the following command whenever you make changes to the code before deploying:
+
+`npm run mobile`
+
+</Callout>
+
+**Important:** Run `npm run mobile` every time you make code changes before building for production or testing on devices.
+
+---
+
+## API & Backend
+
+### Production URL Not Set
+
+<Callout type="warning">
+  Make sure to **update `NEXT_PUBLIC_PRODUCTION_URL`** when you deploy your app
+  and API. Your mobile app fetches data from this endpoint, so the API must be
+  deployed first.
+</Callout>
+
+**Solution:** Update the `NEXT_PUBLIC_PRODUCTION_URL` environment variable in your `.env.local` file to point to your deployed API endpoint before releasing your app.
+
+---
+
+### Missing Authorization Token
+
+<Callout type="warning">
+  Make sure user.token is securely retrieved (e.g. from your auth provider).
+</Callout>
+
+**Solution:** Ensure you're properly obtaining and storing the authentication token from your auth provider before making authenticated API requests.
+
+---
+
+## In-App Purchases
+
+### Products Not Configured in Stores
+
+<Callout>
+  Before you can start using RevenueCat to fetch products, you must configure your products in the respective stores. See the following guides for [App Store Connect](https://www.revenuecat.com/docs/getting-started/entitlements/ios-products), [Google Play Console](https://www.revenuecat.com/docs/getting-started/entitlements/android-products) for help navigating through this process.
+
+If you are selling iOS products, be sure to sign your 'Paid Applications Agreement' and fill out your bank and tax information in App Store Connect > Agreements, Tax, and Banking. This needs to be completed before you can test any purchases.
+
+</Callout>
+
+**Solutions:**
+
+1. Configure your products in App Store Connect (iOS) or Google Play Console (Android) before setting up RevenueCat
+2. For iOS: Sign the Paid Applications Agreement and complete bank/tax information in App Store Connect before testing purchases
+3. Import products into RevenueCat after configuring them in the respective stores
+
+---
+
+## Cache & Build Issues
+
+### Android Studio Cache Issues
+
+After changing your app's package name, namespace, and Java folder structure, Android Studio might still hold on to outdated paths or cached builds. This can lead to strange build errors or the old app ID being used silently.
+
+**Solution:**
+
+1. **Clean the Project:** Menu → Build → Clean Project (removes stale build files)
+2. **Invalidate Caches and Restart:** Menu → File → Invalidate Caches → Click **🟦 Invalidate and Restart**
+
+This will wipe Android Studio's internal caches, restart, and rebuild everything from scratch using the new package name and paths.
+
+---
+
+## CORS Issues
+
+### Preflight Request Failing
+
+When sending requests from a mobile app, especially with custom headers, the browser or WebView may first send an OPTIONS preflight request. If your API route doesn't respond to it, the request will fail.
+
+**Solution:** Add an OPTIONS handler to your API routes:
+
+```ts
+// app/api/chat/route.ts
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  });
+}
+```
+
+This ensures your endpoint handles preflight checks properly, allowing mobile apps to make authenticated requests.
+
+---
+
+## Need More Help?
+
+If you're experiencing an issue not covered here:
+
+1. Check the [Capacitor documentation](https://capacitorjs.com/docs) for native plugin issues
+2. Review the [Firebase documentation](https://firebase.google.com/docs) for Firebase-related problems
+3. Consult the [Next.js documentation](https://nextjs.org/docs) for framework-specific questions
